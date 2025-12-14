@@ -3,7 +3,6 @@ package de.jaypi4c.serialcontroller.controller;
 import com.fazecast.jSerialComm.SerialPort;
 import de.jaypi4c.serialcontroller.model.Communicator;
 import de.jaypi4c.serialcontroller.view.ConnectionPanel;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -14,7 +13,6 @@ import java.util.Arrays;
 @Slf4j
 public class ConnectionPanelController {
 
-    @Getter
     private final ConnectionPanel connectionPanel;
     private final Communicator communicator;
 
@@ -34,8 +32,8 @@ public class ConnectionPanelController {
         return _ -> {
             SerialPort selectedPort = getSelectedPort();
             if (selectedPort != null) {
+                log.debug("Connecting to port {}", selectedPort.getSystemPortPath());
                 communicator.open(selectedPort.getSystemPortPath(), 250000);
-                log.debug("Connected to port {}", selectedPort.getSystemPortPath());
             } else {
                 log.warn("No port selected!");
             }

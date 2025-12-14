@@ -22,6 +22,7 @@ public class SerialController {
         frame.addWindowListener(getWindowListener());
         communicator.addMessageListener(getMessageProcessor(frame.getTextArea()));
         new ConnectionPanelController(communicator, frame.getConnectionPanel());
+        new MessagePanelController(communicator, frame.getMessagePanel());
     }
 
     private CommunicatorMessageListener getMessageProcessor(JTextComponent textComponent) {

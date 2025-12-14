@@ -12,10 +12,12 @@ public class SerialControllerFrame extends JFrame {
     private final JButton offBtn;
     private final ConnectionPanel connectionPanel;
     private final JTextArea textArea;
+    private final MessagePanel messagePanel;
 
     public SerialControllerFrame() {
         setPreferredSize(new Dimension(800, 600));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("SerialController");
 
         setLayout(new BorderLayout());
 
@@ -26,6 +28,9 @@ public class SerialControllerFrame extends JFrame {
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
+
+        messagePanel = new MessagePanel();
+        add(messagePanel, BorderLayout.EAST);
 
         onBtn = new JButton("On");
         offBtn = new JButton("Off");
