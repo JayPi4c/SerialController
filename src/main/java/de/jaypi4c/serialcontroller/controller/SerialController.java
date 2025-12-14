@@ -1,9 +1,11 @@
 package de.jaypi4c.serialcontroller.controller;
 
 import de.jaypi4c.serialcontroller.model.Communicator;
+import de.jaypi4c.serialcontroller.model.CommunicatorMessageListener;
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.swing.text.JTextComponent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowListener;
@@ -18,7 +20,12 @@ public class SerialController {
         frame.getOffBtn().addActionListener(getOffBtnListener());
         frame.getOnBtn().addActionListener(getOnBtnListener());
         frame.addWindowListener(getWindowListener());
+        communicator.addMessageListener(getMessageProcessor(frame.getTextArea()));
         new ConnectionPanelController(communicator, frame.getConnectionPanel());
+    }
+
+    private CommunicatorMessageListener getMessageProcessor(JTextComponent textComponent) {
+        return message -> textComponent.setText(textComponent.getText() + message + "\n");
     }
 
     private WindowListener getWindowListener() {

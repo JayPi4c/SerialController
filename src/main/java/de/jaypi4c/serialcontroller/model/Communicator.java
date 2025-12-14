@@ -17,4 +17,8 @@ public interface Communicator {
     void sendLCDCommand(String msg);
 
     SerialPort[] getPorts();
+
+    void addMessageListener(CommunicatorMessageListener listener);
+
+    void removeMessageListener(CommunicatorMessageListener listener);
 }

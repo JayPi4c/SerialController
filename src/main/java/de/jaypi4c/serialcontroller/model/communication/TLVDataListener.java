@@ -3,11 +3,13 @@ package de.jaypi4c.serialcontroller.model.communication;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import de.jaypi4c.serialcontroller.model.CommunicatorMessageListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * DataListener expecting data in the TLV Format
@@ -20,6 +22,7 @@ public class TLVDataListener implements SerialPortDataListener {
 
     private final ByteArrayOutputStream payload = new ByteArrayOutputStream();
     private final SerialPort serialPort;
+    private final List<CommunicatorMessageListener> listeners;
     private int expectedLength = -1;           // -1 = waiting for length
 
     @Override
@@ -50,7 +53,10 @@ public class TLVDataListener implements SerialPortDataListener {
             if (payload.size() == expectedLength) {
                 // Full message received
                 String message = payload.toString(StandardCharsets.UTF_8);
-                log.info("Received: {}", message);
+                log.debug("Received: {}", message);
+                for (CommunicatorMessageListener listener : listeners) {
+                    listener.onMessageReceived(message);
+                }
 
                 // Reset for next message
                 expectedLength = -1;

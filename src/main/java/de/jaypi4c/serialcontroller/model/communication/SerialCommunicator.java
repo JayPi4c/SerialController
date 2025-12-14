@@ -2,21 +2,37 @@ package de.jaypi4c.serialcontroller.model.communication;
 
 import com.fazecast.jSerialComm.SerialPort;
 import de.jaypi4c.serialcontroller.model.Communicator;
+import de.jaypi4c.serialcontroller.model.CommunicatorMessageListener;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class SerialCommunicator implements Communicator {
 
+    private final List<CommunicatorMessageListener> listeners;
     private SerialPort serialPort;
-
     @Getter
     private boolean connected = false;
 
+    public SerialCommunicator() {
+        listeners = new ArrayList<>();
+    }
+
     public SerialPort[] getPorts() {
         return SerialPort.getCommPorts();
+    }
+
+    @Override
+    public void addMessageListener(CommunicatorMessageListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeMessageListener(CommunicatorMessageListener listener) {
+        listeners.remove(listener);
     }
 
     @Override
@@ -40,7 +56,7 @@ public class SerialCommunicator implements Communicator {
                 1000,    // Read timeout (ms)
                 0
         );
-        serialPort.addDataListener(new TLVDataListener(serialPort));
+        serialPort.addDataListener(new TLVDataListener(serialPort, listeners));
 
         if (!serialPort.openPort())
             log.error("Failed to open port");
