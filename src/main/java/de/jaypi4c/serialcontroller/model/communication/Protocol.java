@@ -1,4 +1,4 @@
-package de.jaypi4c.serialcontroller.communication;
+package de.jaypi4c.serialcontroller.model.communication;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,0 +1,8 @@
+module ArduinoJava {
+    requires com.fazecast.jSerialComm;
+    requires static lombok;
+
+    requires org.slf4j;
+    requires java.desktop;
+
+}

@@ -1,4 +1,4 @@
-package de.jaypi4c.serialcontroller.communication;
+package de.jaypi4c.serialcontroller.model.communication;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
@@ -59,4 +59,3 @@ public class TLVDataListener implements SerialPortDataListener {
         }
     }
 }
-
