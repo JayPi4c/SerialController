@@ -1,9 +1,9 @@
 package de.jaypi4c.serialcontroller.controller;
 
 import com.fazecast.jSerialComm.SerialPort;
-import de.jaypi4c.serialcontroller.model.Communicator;
 import de.jaypi4c.serialcontroller.view.ConnectionPanel;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.jduino.Communicator;
 
 import javax.swing.*;
 import java.awt.*;

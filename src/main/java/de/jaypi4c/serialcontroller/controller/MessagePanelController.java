@@ -1,7 +1,8 @@
 package de.jaypi4c.serialcontroller.controller;
 
-import de.jaypi4c.serialcontroller.model.Communicator;
 import de.jaypi4c.serialcontroller.view.MessagePanel;
+import org.schlunzis.jduino.Communicator;
+import org.schlunzis.jduino.commuication.SimpleCommunicator;
 
 import java.awt.event.ActionListener;
 
@@ -17,8 +18,7 @@ public class MessagePanelController {
     }
 
     private ActionListener getSendActionListener() {
-        return _ -> communicator.sendEchoCommand(messagePanel.getMessageField().getText());
+        return _ -> ((SimpleCommunicator) communicator).sendEchoCommand(messagePanel.getMessageField().getText());
     }
-
 
 }

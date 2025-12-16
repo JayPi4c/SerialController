@@ -1,9 +1,9 @@
 package de.jaypi4c.serialcontroller;
 
 import de.jaypi4c.serialcontroller.controller.SerialController;
-import de.jaypi4c.serialcontroller.model.communication.SerialCommunicator;
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.jduino.commuication.SimpleCommunicator;
 
 import javax.swing.*;
 
@@ -15,7 +15,7 @@ import javax.swing.*;
 public class SerialControllerApp {
 
     static void main() {
-        SwingUtilities.invokeLater(() -> new SerialController(new SerialCommunicator(), new SerialControllerFrame()));
+        SwingUtilities.invokeLater(() -> new SerialController(new SimpleCommunicator(), new SerialControllerFrame()));
     }
 
 }

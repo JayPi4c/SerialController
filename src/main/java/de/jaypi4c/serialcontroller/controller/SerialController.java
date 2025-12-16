@@ -1,9 +1,10 @@
 package de.jaypi4c.serialcontroller.controller;
 
-import de.jaypi4c.serialcontroller.model.Communicator;
-import de.jaypi4c.serialcontroller.model.CommunicatorMessageListener;
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.jduino.Communicator;
+import org.schlunzis.jduino.CommunicatorMessageListener;
+import org.schlunzis.jduino.commuication.SimpleCommunicator;
 
 import javax.swing.text.JTextComponent;
 import java.awt.event.ActionListener;
@@ -26,7 +27,7 @@ public class SerialController {
     }
 
     private CommunicatorMessageListener getMessageProcessor(JTextComponent textComponent) {
-        return message -> textComponent.setText(textComponent.getText() + message + "\n");
+        return (_, message) -> textComponent.setText(textComponent.getText() + message + "\n");
     }
 
     private WindowListener getWindowListener() {
@@ -44,11 +45,11 @@ public class SerialController {
     }
 
     private ActionListener getOffBtnListener() {
-        return _ -> communicator.sendLEDCommand(13, false);
+        return _ -> ((SimpleCommunicator) communicator).sendLEDCommand(13, false);
     }
 
     private ActionListener getOnBtnListener() {
-        return _ -> communicator.sendLEDCommand(13, true);
+        return _ -> ((SimpleCommunicator) communicator).sendLEDCommand(13, true);
     }
 
 }
