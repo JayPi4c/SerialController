@@ -3,7 +3,8 @@ package de.jaypi4c.serialcontroller.controller;
 import com.fazecast.jSerialComm.SerialPort;
 import de.jaypi4c.serialcontroller.view.ConnectionPanel;
 import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.jduino.Communicator;
+import org.schlunzis.jduino.Channel;
+import org.schlunzis.jduino.proto.tlv.TLV;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,9 +15,9 @@ import java.util.Arrays;
 public class ConnectionPanelController {
 
     private final ConnectionPanel connectionPanel;
-    private final Communicator communicator;
+    private final Channel<TLV> communicator;
 
-    public ConnectionPanelController(Communicator communicator, ConnectionPanel connectionPanel) {
+    public ConnectionPanelController(Channel<TLV> communicator, ConnectionPanel connectionPanel) {
         this.connectionPanel = connectionPanel;
         this.communicator = communicator;
         Arrays.stream(communicator.getPorts()).forEach(connectionPanel.getConnections()::addItem);

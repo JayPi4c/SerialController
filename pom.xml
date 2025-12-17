@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.jaypi4c</groupId>
-    <artifactId>ArduinoJava</artifactId>
+    <artifactId>SerialController</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>ArduinoJava</name>
-    <url>http://maven.apache.org</url>
+    <name>SerialController</name>
+    <url>https://github.com/JayPi4c/SerialController</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.github.schlunzis</groupId>
             <artifactId>jduino</artifactId>
-            <version>88c29d8a745d5408191393e45659303aae454d7b</version>
+            <version>c308e72</version>
         </dependency>
 
         <dependency>
