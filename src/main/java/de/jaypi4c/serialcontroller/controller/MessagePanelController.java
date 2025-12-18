@@ -14,10 +14,14 @@ public class MessagePanelController {
         this.communicator = communicator;
         this.messagePanel = messagePanel;
         messagePanel.getSendButton().addActionListener(getSendActionListener());
+        messagePanel.getMessageField().addActionListener(getSendActionListener());
     }
 
     private ActionListener getSendActionListener() {
-        return _ -> communicator.sendEchoCommand(messagePanel.getMessageField().getText());
+        return _ -> {
+            communicator.sendEchoCommand(messagePanel.getMessageField().getText());
+            messagePanel.getMessageField().setText("");
+        };
     }
 
 }

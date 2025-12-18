@@ -4,6 +4,6 @@ module ArduinoJava {
 
     requires org.slf4j;
     requires java.desktop;
-    requires org.schlunzis.jduino;
+    requires org.schlunzis.jduino.simple;
 
 }

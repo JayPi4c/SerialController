@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
         <lombok.version>1.18.42</lombok.version>
+        <logback.version>1.5.22</logback.version>
     </properties>
 
     <repositories>
@@ -31,28 +32,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.schlunzis</groupId>
-            <artifactId>jduino</artifactId>
-            <version>d55e68d</version>
+            <groupId>com.github.schlunzis.jduino</groupId>
+            <artifactId>simple</artifactId>
+            <version>2ad671a4f4eda8e0709f7183c2b51a7ed6624cdc</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.5.22</version>
+            <version>${logback.version}</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.22</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            <version>${logback.version}</version>
         </dependency>
     </dependencies>
     <build>
