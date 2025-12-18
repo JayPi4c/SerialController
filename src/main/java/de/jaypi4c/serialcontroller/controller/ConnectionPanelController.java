@@ -1,14 +1,14 @@
 package de.jaypi4c.serialcontroller.controller;
 
-import com.fazecast.jSerialComm.SerialPort;
 import de.jaypi4c.serialcontroller.view.ConnectionPanel;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.jduino.channel.serial.SerialDevice;
+import org.schlunzis.jduino.channel.serial.SerialDeviceConfiguration;
 import org.schlunzis.jduino.simple.SimpleChannel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 @Slf4j
 public class ConnectionPanelController {
@@ -19,21 +19,21 @@ public class ConnectionPanelController {
     public ConnectionPanelController(SimpleChannel communicator, ConnectionPanel connectionPanel) {
         this.connectionPanel = connectionPanel;
         this.communicator = communicator;
-        Arrays.stream(communicator.getPorts()).forEach(connectionPanel.getConnections()::addItem);
+        communicator.getDevices().forEach(connectionPanel.getConnections()::addItem);
         connectionPanel.getConnections().setRenderer(getPortRenderer());
         connectionPanel.getConnectButton().addActionListener(getConnectButtonListener());
     }
 
-    private SerialPort getSelectedPort() {
-        return (SerialPort) connectionPanel.getConnections().getSelectedItem();
+    private SerialDevice getSelectedPort() {
+        return (SerialDevice) connectionPanel.getConnections().getSelectedItem();
     }
 
     private ActionListener getConnectButtonListener() {
         return _ -> {
-            SerialPort selectedPort = getSelectedPort();
+            SerialDevice selectedPort = getSelectedPort();
             if (selectedPort != null) {
-                log.debug("Connecting to port {}", selectedPort.getSystemPortPath());
-                communicator.open(selectedPort.getSystemPortPath(), 250000);
+                log.debug("Connecting to port {}", selectedPort.portPath());
+                communicator.open(new SerialDeviceConfiguration(selectedPort, 250000));
             } else {
                 log.warn("No port selected!");
             }
@@ -44,12 +44,12 @@ public class ConnectionPanelController {
         return new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                SerialPort serialPort = (SerialPort) value;
+                SerialDevice serialPort = (SerialDevice) value;
                 String disp;
                 if (index == -1)
-                    disp = serialPort.getSystemPortName();
+                    disp = serialPort.getDisplayName();
                 else
-                    disp = serialPort.getSystemPortPath();
+                    disp = serialPort.portPath();
                 return super.getListCellRendererComponent(list, disp, index, isSelected, cellHasFocus);
             }
         };

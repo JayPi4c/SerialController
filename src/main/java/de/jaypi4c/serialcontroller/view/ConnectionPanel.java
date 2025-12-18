@@ -1,7 +1,7 @@
 package de.jaypi4c.serialcontroller.view;
 
-import com.fazecast.jSerialComm.SerialPort;
 import lombok.Getter;
+import org.schlunzis.jduino.channel.serial.SerialDevice;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.*;
 public class ConnectionPanel extends JPanel {
 
     private final JButton connectButton;
-    private final JComboBox<SerialPort> connections;
+    private final JComboBox<SerialDevice> connections;
 
     public ConnectionPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));

@@ -4,7 +4,6 @@ import de.jaypi4c.serialcontroller.controller.SerialController;
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.jduino.channel.Channel;
-import org.schlunzis.jduino.protocol.tlv.TLV;
 import org.schlunzis.jduino.simple.SimpleChannel;
 
 import javax.swing.*;
@@ -17,7 +16,7 @@ import javax.swing.*;
 public class SerialControllerApp {
 
     static void main() {
-        SimpleChannel conn = Channel.builder().protocol(new TLV()).channelFactory(SimpleChannel::new).build();
+        SimpleChannel conn = Channel.builder().simple().build();
         SwingUtilities.invokeLater(() -> new SerialController(conn, new SerialControllerFrame()));
     }
 

@@ -2,7 +2,6 @@ package de.jaypi4c.serialcontroller.controller;
 
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
 import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.jduino.channel.Channel;
 import org.schlunzis.jduino.channel.ChannelMessageListener;
 import org.schlunzis.jduino.protocol.tlv.TLV;
 import org.schlunzis.jduino.protocol.tlv.TLVMessage;
