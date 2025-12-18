@@ -3,7 +3,10 @@ package de.jaypi4c.serialcontroller.view;
 import lombok.Getter;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
+
+import static javax.swing.text.DefaultCaret.ALWAYS_UPDATE;
 
 @Getter
 public class SerialControllerFrame extends JFrame {
@@ -26,6 +29,8 @@ public class SerialControllerFrame extends JFrame {
 
         textArea = new JTextArea();
         textArea.setEditable(false);
+        DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+        caret.setUpdatePolicy(ALWAYS_UPDATE);
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
 
