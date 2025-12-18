@@ -2,10 +2,11 @@ package de.jaypi4c.serialcontroller.controller;
 
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
 import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.jduino.Channel;
-import org.schlunzis.jduino.ChannelMessageListener;
-import org.schlunzis.jduino.proto.tlv.TLVMessage;
-import org.schlunzis.jduino.simple.SimpleProtocol;
+import org.schlunzis.jduino.channel.Channel;
+import org.schlunzis.jduino.channel.ChannelMessageListener;
+import org.schlunzis.jduino.protocol.tlv.TLV;
+import org.schlunzis.jduino.protocol.tlv.TLVMessage;
+import org.schlunzis.jduino.simple.SimpleChannel;
 
 import javax.swing.text.JTextComponent;
 import java.awt.event.ActionListener;
@@ -16,9 +17,9 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class SerialController {
 
-    private final Channel<?> communicator;
+    private final SimpleChannel communicator;
 
-    public SerialController(Channel<?> communicator, SerialControllerFrame frame) {
+    public SerialController(SimpleChannel communicator, SerialControllerFrame frame) {
         this.communicator = communicator;
         frame.getOffBtn().addActionListener(getOffBtnListener());
         frame.getOnBtn().addActionListener(getOnBtnListener());
@@ -29,8 +30,8 @@ public class SerialController {
         new MessagePanelController(communicator, frame.getMessagePanel());
     }
 
-    private ChannelMessageListener<?> getMessageProcessor(JTextComponent textComponent) {
-        return (message) -> textComponent.setText(textComponent.getText() + new String(message.value(), StandardCharsets.UTF_8) + "\n");
+    private ChannelMessageListener<TLV> getMessageProcessor(JTextComponent textComponent) {
+        return (message) -> textComponent.setText(textComponent.getText() + new String(((TLVMessage)message).value(), StandardCharsets.UTF_8) + "\n");
     }
 
     private WindowListener getWindowListener() {
@@ -48,21 +49,11 @@ public class SerialController {
     }
 
     private ActionListener getOffBtnListener() {
-        return _ -> {
-            byte[] ledPayload = new byte[2];
-            ledPayload[0] = 13; // LED pin
-            ledPayload[1] = 0;  // OFF
-            communicator.sendMessage(new TLVMessage(SimpleProtocol.CMD_LED.getCode(), (byte) ledPayload.length, ledPayload));
-        };
+        return _ -> communicator.sendLEDCommand(13, false);
     }
 
     private ActionListener getOnBtnListener() {
-        return _ -> {
-            byte[] ledPayload = new byte[2];
-            ledPayload[0] = 13; // LED pin
-            ledPayload[1] = 1;  // ON
-            communicator.sendMessage(new TLVMessage(SimpleProtocol.CMD_LED.getCode(), (byte) ledPayload.length, ledPayload));
-        };
+        return _ -> communicator.sendLEDCommand(13, true);
     }
 
 }
