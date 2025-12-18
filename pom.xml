@@ -33,8 +33,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.schlunzis.jduino</groupId>
-            <artifactId>simple</artifactId>
-            <version>2ad671a4f4eda8e0709f7183c2b51a7ed6624cdc</version>
+            <artifactId>serial</artifactId>
+            <version>81790ab</version>
         </dependency>
 
         <dependency>

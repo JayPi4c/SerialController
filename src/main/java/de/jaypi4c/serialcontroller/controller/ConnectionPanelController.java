@@ -1,10 +1,11 @@
 package de.jaypi4c.serialcontroller.controller;
 
+import de.jaypi4c.serialcontroller.protocol.ltv.LTV;
 import de.jaypi4c.serialcontroller.view.ConnectionPanel;
 import lombok.extern.slf4j.Slf4j;
+import org.schlunzis.jduino.channel.Channel;
 import org.schlunzis.jduino.channel.serial.SerialDevice;
 import org.schlunzis.jduino.channel.serial.SerialDeviceConfiguration;
-import org.schlunzis.jduino.simple.SimpleChannel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,9 +15,9 @@ import java.awt.event.ActionListener;
 public class ConnectionPanelController {
 
     private final ConnectionPanel connectionPanel;
-    private final SimpleChannel communicator;
+    private final Channel<LTV> communicator;
 
-    public ConnectionPanelController(SimpleChannel communicator, ConnectionPanel connectionPanel) {
+    public ConnectionPanelController(Channel<LTV> communicator, ConnectionPanel connectionPanel) {
         this.connectionPanel = connectionPanel;
         this.communicator = communicator;
         communicator.getDevices().forEach(connectionPanel.getConnections()::addItem);

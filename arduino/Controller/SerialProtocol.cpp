@@ -23,9 +23,7 @@ void SerialProtocol::update() {
   while (Serial.available() > 0) {
     uint8_t b = Serial.read();
 
-    if (_type < 0) {
-      _type = b;
-    } else if (_expectedLength < 0) {
+   if (_expectedLength < 0) {
       _expectedLength = b;
       _bytesRead = 0;
       if (_expectedLength > _maxMsgLen) {
@@ -33,7 +31,9 @@ void SerialProtocol::update() {
         // TODO: discard _expectedLength of bytes as payload should not be wrongly interpreted
         _reset();
       }
-    } else {
+    } else if (_type < 0) {
+      _type = b;
+    } else  {
       _buffer[_bytesRead++] = b;
 
       if (_bytesRead == _expectedLength) {
@@ -54,7 +54,7 @@ void SerialProtocol::_reset() {
 
 void SerialProtocol::sendMessage(const uint8_t type, const char* msg) {
   uint8_t len = strlen(msg);
-  Serial.write(type);
   Serial.write(len);
+  Serial.write(type);
   Serial.write((const uint8_t*)msg, len);
 }
