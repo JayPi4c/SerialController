@@ -5,6 +5,9 @@ const char* ERR_NOT_IMPLEMENTED_CMD = "ERR_NOT_IMPLEMENTED_CMD";
 const char* ERR_UNKNOWN_CMD = "ERR_UNKNOWN_CMD";
 const char* OK = "OK";
 
+volatile bool pressed = false;
+const byte interruptPin = 3;
+
 enum CommandType : uint8_t {
   CMD_ACK = 0x00,
   CMD_ECHO = 0x01,
@@ -21,7 +24,7 @@ LTVOutgoingProtocol outgoing;
 SerialProtocol serial(&incoming, &outgoing);
 
 void onMessage(uint8_t type, int len, uint8_t* msg) {
-  
+
   if (len < 1) return;
 
   switch (type) {
@@ -68,11 +71,21 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
+
+  attachInterrupt(digitalPinToInterrupt(interruptPin), buttonHandler, CHANGE);
 }
 
 void loop() {
+  if (pressed) {
+    serial.send(CMD_BUTTON, "Button pressed");
+    pressed = false;
+  }
 }
 
-void serialEvent(){
+void serialEvent() {
   serial.update();
+}
+
+void buttonHandler() {
+  pressed = true;
 }
