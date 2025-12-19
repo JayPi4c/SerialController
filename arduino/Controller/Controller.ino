@@ -18,7 +18,7 @@ void setup() {
   digitalWrite(LED_BUILTIN, LOW);
 
   button.begin();
-  serialProto.begin();
+  serialProto.begin(9600);
   serialProto.setMessageHandler(handleMessage);
 }
 
