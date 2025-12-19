@@ -12,9 +12,6 @@ public:
   void update();
   void send(uint8_t type, const uint8_t* data, size_t len);
   void send(uint8_t type, const char* msg);
-  static const char* ERR_NOT_IMPLEMENTED_CMD;
-  static const char* ERR_UNKNOWN_CMD;
-  static const char* OK;
 
 private:
   IIncomingProtocol* _incoming;

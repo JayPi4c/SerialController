@@ -1,5 +1,5 @@
 #include "SerialProtocol.h"
-#include "LTVProtocol.h"
+#include "TLVProtocol.h"
 
 const char* ERR_NOT_IMPLEMENTED_CMD = "ERR_NOT_IMPLEMENTED_CMD";
 const char* ERR_UNKNOWN_CMD = "ERR_UNKNOWN_CMD";
@@ -15,13 +15,13 @@ enum CommandType : uint8_t {
 void onMessage(uint8_t type, int len, uint8_t* msg);
 bool state = false;
 
-LTVIncomingProtocol incoming(64, onMessage);
-LTVOutgoingProtocol outgoing;
+TLVIncomingProtocol incoming(64, onMessage);
+TLVOutgoingProtocol outgoing;
 
 SerialProtocol serial(&incoming, &outgoing);
 
 void onMessage(uint8_t type, int len, uint8_t* msg) {
-  
+
   if (len < 1) return;
 
   switch (type) {
@@ -73,6 +73,6 @@ void setup() {
 void loop() {
 }
 
-void serialEvent(){
+void serialEvent() {
   serial.update();
 }

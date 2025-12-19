@@ -1,10 +1,5 @@
 #include "SerialProtocol.h"
 
-const char* SerialProtocol::ERR_NOT_IMPLEMENTED_CMD = "ERR_NOT_IMPLEMENTED_CMD";
-const char* SerialProtocol::ERR_UNKNOWN_CMD = "ERR_UNKNOWN_CMD";
-const char* SerialProtocol::OK = "OK";
-
-
 SerialProtocol::SerialProtocol(
   IIncomingProtocol* in,
   IOutgoingProtocol* out
