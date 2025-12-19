@@ -35,7 +35,7 @@ public class ConnectionPanelController {
             CharacterDevice selectedPort = (CharacterDevice) getSelectedPort();
             if (selectedPort != null) {
                 log.debug("Connecting to port {}", selectedPort);
-                communicator.open(new CharacterDeviceConfiguration(selectedPort, 9600));
+                communicator.open(new CharacterDeviceConfiguration(selectedPort));
             } else {
                 log.warn("No port selected!");
             }

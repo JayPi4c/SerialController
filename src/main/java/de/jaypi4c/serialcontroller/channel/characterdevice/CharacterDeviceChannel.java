@@ -16,16 +16,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/// Only 9600 baud rate supported for now. You have to set the Arduino to 9600 baud rate in the sketch:
+///
+/// Or you have to update the baud rate using stty command before running the application: `stty -F /dev/ttyACM0 115200`
+///
+/// @param <P>
 @Slf4j
 public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P> {
-
     private final List<ChannelMessageListener<P>> listeners;
     private final P protocol;
     private FileOutputStream outputStream;
     private FileInputStream inputStream;
     private boolean connected;
     private Thread dataListener;
-    private double delayBetweenBytesMs;
 
     public CharacterDeviceChannel(P protocol) {
         this.listeners = new ArrayList<>();
@@ -35,11 +38,10 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
     @Override
     public void open(DeviceConfiguration deviceConfiguration) {
         if (!(deviceConfiguration instanceof CharacterDeviceConfiguration(
-                CharacterDevice(_, String portPath), int baudRate
+                CharacterDevice(_, String portPath)
         )))
             throw new IllegalArgumentException("Invalid device configuration type");
         try {
-            setupBaudRate(baudRate);
             outputStream = new FileOutputStream(portPath);
             inputStream = new FileInputStream(portPath);
             Runnable r = () -> {
@@ -47,7 +49,7 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
                     while (!Thread.currentThread().isInterrupted()) {
                         int data = inputStream.read();
                         protocol.getMessageDecoder().pushNextByte((byte) data);
-                        log.debug("Read byte: 0x{}", Integer.toHexString(data & 0xFF));
+                        // log.debug("Read byte: 0x{}", Integer.toHexString(data & 0xFF));
                         if (protocol.getMessageDecoder().isMessageComplete()) {
                             Message<P> message = protocol.getMessageDecoder().getDecodedMessage();
                             for (ChannelMessageListener<P> listener : listeners) {
@@ -67,13 +69,6 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
         }
     }
 
-    private void setupBaudRate(int baudRate) {
-        this.delayBetweenBytesMs = (((1d / baudRate) * 8) * 1000d);
-        //this.delayBetweenBytesMs = 1000.0 / ((baudRate * 1000.0) / 8.0);
-        log.debug("Setting up baud rate: {} bps, delay between bytes: {} ms", baudRate, delayBetweenBytesMs);
-        this.delayBetweenBytesMs = Math.ceil(delayBetweenBytesMs) * 100;
-    }
-
     @Override
     public void close() {
         try {
@@ -91,16 +86,12 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
 
     @Override
     public void sendMessage(Message<P> message) {
-        log.debug("Sending message: {}", message);
         byte[] encodedMessage = protocol.getMessageEncoder().encode(message);
+        log.debug("Sending bytes: {}", Arrays.toString(encodedMessage));
         try {
-            log.debug("Sending bytes: {}", Arrays.toString(encodedMessage));
-            for (byte b : encodedMessage) {
-                outputStream.write(b);
-                outputStream.flush();
-                Thread.sleep(100);
-            }
-        } catch (IOException | InterruptedException e) {
+            outputStream.write(encodedMessage);
+            outputStream.flush();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
