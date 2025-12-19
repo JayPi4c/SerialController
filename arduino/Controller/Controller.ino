@@ -1,8 +1,6 @@
-#include "ButtonHandler.h"
 #include "SerialProtocol.h"
+#include "LTVProtocol.h"
 
-ButtonHandler button(3, 50);     // pin 3, debounce 50ms
-SerialProtocol serialProto(64);  // max message length 64
 
 enum CommandType : uint8_t {
   CMD_ACK = 0x00,
@@ -11,29 +9,16 @@ enum CommandType : uint8_t {
   CMD_LED = 0x03,
   CMD_LCD = 0x04
 };
+void onMessage(uint8_t type, int len, uint8_t* msg);
+bool state = false;
 
-void setup() {
-  // LED setup
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
+LTVIncomingProtocol incoming(64, onMessage);
+LTVOutgoingProtocol outgoing;
 
-  button.begin();
-  serialProto.begin(9600);
-  serialProto.setMessageHandler(handleMessage);
-}
+SerialProtocol serial(&incoming, &outgoing);
 
-void loop() {
-  serialProto.update();
-
-  if (button.isPressed()) {
-    serialProto.sendMessage(CMD_BUTTON, "Button Pressed!");
-  }
-}
-
-
-// Callback for incoming messages
-void handleMessage(uint8_t type, int len, uint8_t* msg) {
-
+void onMessage(uint8_t type, int len, uint8_t* msg) {
+  
   if (len < 1) return;
 
   switch (type) {
@@ -42,17 +27,17 @@ void handleMessage(uint8_t type, int len, uint8_t* msg) {
         String text = "";
         for (int i = 0; i < len; i++) text += (char)msg[i];
         String echo = "ECHO: " + text;
-        serialProto.sendMessage(CMD_ACK, echo.c_str());
+        serial.send(CMD_ACK, echo.c_str());
         break;
       }
     case CMD_BUTTON:
       {
-        serialProto.sendMessage(CMD_ACK, SerialProtocol::ERR_NOT_IMPLEMENTED_CMD);
+        serial.send(CMD_ACK, SerialProtocol::ERR_NOT_IMPLEMENTED_CMD);
         break;
       }
     case CMD_LCD:
       {
-        serialProto.sendMessage(CMD_ACK, SerialProtocol::ERR_NOT_IMPLEMENTED_CMD);
+        serial.send(CMD_ACK, SerialProtocol::ERR_NOT_IMPLEMENTED_CMD);
         break;
       }
     case CMD_LED:
@@ -61,47 +46,30 @@ void handleMessage(uint8_t type, int len, uint8_t* msg) {
           uint8_t ledPin = msg[0];
           uint8_t state = msg[1];
           digitalWrite(ledPin, state);
-          serialProto.sendMessage(CMD_ACK, SerialProtocol::OK);
+          serial.send(CMD_ACK, SerialProtocol::OK);
         }
         break;
       }
     default:
       {
-        serialProto.sendMessage(CMD_ACK, SerialProtocol::ERR_UNKNOWN_CMD);
+        serial.send(CMD_ACK, SerialProtocol::ERR_UNKNOWN_CMD);
         break;
       }
   }
 }
-/*
-char out[64];
-buildMessage(type, msg, len, out, 64);
-serialProto.sendMessage(CMD_ACK, out);
 
-void buildMessage(
-  uint8_t type,
-  const uint8_t* msg,
-  int len,
-  char* out,
-  size_t outSize) {
-  char* p = out;
-  size_t remaining = outSize;
 
-  // Header: "type|len|"
-  int written = snprintf(p, remaining, "%d|%d|", type, len);
-  p += written;
-  remaining -= written;
 
-  // Payload: "1,164,255"
-  for (int i = 0; i < len; i++) {
-    written = snprintf(
-      p,
-      remaining,
-      "%d%s",
-      msg[i],
-      (i < len - 1) ? "," : "");
+void setup() {
+  serial.begin();
 
-    p += written;
-    remaining -= written;
-  }
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
 }
-*/
+
+void loop() {
+}
+
+void serialEvent(){
+  serial.update();
+}
