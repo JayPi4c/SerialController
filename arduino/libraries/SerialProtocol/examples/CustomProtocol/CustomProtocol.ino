@@ -1,12 +1,9 @@
 #include "SerialProtocol.h"
-#include "LTVProtocol.h"
+#include "TLVProtocol.h"
 
 const char* ERR_NOT_IMPLEMENTED_CMD = "ERR_NOT_IMPLEMENTED_CMD";
 const char* ERR_UNKNOWN_CMD = "ERR_UNKNOWN_CMD";
 const char* OK = "OK";
-
-volatile bool pressed = false;
-const byte interruptPin = 3;
 
 enum CommandType : uint8_t {
   CMD_ACK = 0x00,
@@ -18,8 +15,8 @@ enum CommandType : uint8_t {
 void onMessage(uint8_t type, int len, uint8_t* msg);
 bool state = false;
 
-LTVIncomingProtocol incoming(64, onMessage);
-LTVOutgoingProtocol outgoing;
+TLVIncomingProtocol incoming(64, onMessage);
+TLVOutgoingProtocol outgoing;
 
 SerialProtocol serial(&incoming, &outgoing);
 
@@ -67,30 +64,15 @@ void onMessage(uint8_t type, int len, uint8_t* msg) {
 
 
 void setup() {
+  serial.begin();
+
   pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH);
-
-  serial.begin(9600);
-
   digitalWrite(LED_BUILTIN, LOW);
-
-  attachInterrupt(digitalPinToInterrupt(interruptPin), buttonHandler, CHANGE);
 }
 
 void loop() {
-  // serial.update(); // update serial in loop when using Leonardo, Micro, or other ATmega32U4 based boards
-
-  if (pressed) {
-    serial.send(CMD_BUTTON, "Button pressed");
-    pressed = false;
-  }
 }
 
-// You may use this method, if you are not using Leonardo, Micro, or other ATmega32U4 based boards
 void serialEvent() {
   serial.update();
-}
-
-void buttonHandler() {
-  pressed = true;
 }
