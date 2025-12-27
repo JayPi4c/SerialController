@@ -1,5 +1,7 @@
 package de.jaypi4c.serialcontroller.controller;
 
+import de.jaypi4c.serialcontroller.controller.config.ConnectionPanelController;
+import de.jaypi4c.serialcontroller.model.Communicator;
 import de.jaypi4c.serialcontroller.protocol.ltv.LTV;
 import de.jaypi4c.serialcontroller.protocol.ltv.LTVMessage;
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
@@ -16,10 +18,10 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class SerialController {
 
-    private final Channel<LTV> communicator;
+    private final Communicator communicator;
 
-    public SerialController(Channel<LTV> communicator, SerialControllerFrame frame) {
-        this.communicator = communicator;
+    public SerialController(SerialControllerFrame frame) {
+        this.communicator = new Communicator();
         frame.getOffBtn().addActionListener(getOffBtnListener());
         frame.getOnBtn().addActionListener(getOnBtnListener());
         frame.addWindowListener(getWindowListener());
@@ -43,7 +45,7 @@ public class SerialController {
     }
 
     private void finish() {
-        communicator.close();
+        communicator.getChannel().close();
         log.debug("Closing serial controller");
     }
 
@@ -52,7 +54,7 @@ public class SerialController {
             byte[] payload = new byte[2];
             payload[0] = (byte) 13;
             payload[1] = (byte) 0;
-            communicator.sendMessage(new LTVMessage((byte) 3, payload));
+            communicator.getChannel().sendMessage(new LTVMessage((byte) 3, payload));
         };
     }
 
@@ -61,7 +63,7 @@ public class SerialController {
             byte[] payload = new byte[2];
             payload[0] = (byte) 13;
             payload[1] = (byte) 1;
-            communicator.sendMessage(new LTVMessage((byte) 3, payload));
+            communicator.getChannel().sendMessage(new LTVMessage((byte) 3, payload));
         };
     }
 
