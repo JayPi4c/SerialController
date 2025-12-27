@@ -4,7 +4,8 @@ import org.schlunzis.jduino.channel.Device;
 
 public record CharacterDevice(
         String portName,
-        String portPath
+        String portPath,
+        int baud
 ) implements Device {
 
     @Override

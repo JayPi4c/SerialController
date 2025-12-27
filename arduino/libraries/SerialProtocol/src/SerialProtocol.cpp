@@ -8,6 +8,9 @@ SerialProtocol::SerialProtocol(
 
 void SerialProtocol::begin(unsigned long baud) {
   Serial.begin(baud);
+  while (!Serial) {
+    ;
+  }
 }
 
 void SerialProtocol::update() {
