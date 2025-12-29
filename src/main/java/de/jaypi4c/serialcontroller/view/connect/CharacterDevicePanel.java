@@ -77,7 +77,7 @@ public class CharacterDevicePanel extends JPanel implements ConfigurationPanel {
         try {
             return Integer.parseInt(ledPinInputField.getText());
         } catch (NumberFormatException _) {
-            return 13;
+            return ConfigurationPanel.super.getLEDPin();
         }
     }
 

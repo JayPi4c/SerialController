@@ -15,7 +15,9 @@ public interface ConfigurationPanel {
 
     DeviceConfiguration getCurrentConfiguration();
 
-    int getLEDPin();
+    default int getLEDPin() {
+        return 13;
+    }
 
     String getID();
 
