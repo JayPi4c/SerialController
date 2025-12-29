@@ -6,7 +6,6 @@ import de.jaypi4c.serialcontroller.protocol.ltv.LTV;
 import de.jaypi4c.serialcontroller.protocol.ltv.LTVMessage;
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
 import lombok.extern.slf4j.Slf4j;
-import org.schlunzis.jduino.channel.Channel;
 import org.schlunzis.jduino.channel.ChannelMessageListener;
 
 import javax.swing.text.JTextComponent;
@@ -52,7 +51,7 @@ public class SerialController {
     private ActionListener getOffBtnListener() {
         return _ -> {
             byte[] payload = new byte[2];
-            payload[0] = (byte) 13;
+            payload[0] = (byte) communicator.getLedPin();
             payload[1] = (byte) 0;
             communicator.getChannel().sendMessage(new LTVMessage((byte) 3, payload));
         };
@@ -61,7 +60,7 @@ public class SerialController {
     private ActionListener getOnBtnListener() {
         return _ -> {
             byte[] payload = new byte[2];
-            payload[0] = (byte) 13;
+            payload[0] = (byte) communicator.getLedPin();
             payload[1] = (byte) 1;
             communicator.getChannel().sendMessage(new LTVMessage((byte) 3, payload));
         };

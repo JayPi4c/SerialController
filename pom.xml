@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.schlunzis.jduino</groupId>
-            <artifactId>api</artifactId>
+            <artifactId>simple</artifactId>
             <version>5abb3fec1c945f179be0bf4a60e2385b1d2d69dd</version>
         </dependency>
 
