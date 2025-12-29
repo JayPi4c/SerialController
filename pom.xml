@@ -15,6 +15,7 @@
         <maven.compiler.release>25</maven.compiler.release>
         <lombok.version>1.18.42</lombok.version>
         <logback.version>1.5.22</logback.version>
+        <jduino.version>5abb3fec1c945f179be0bf4a60e2385b1d2d69dd</jduino.version>
     </properties>
 
     <repositories>
@@ -25,30 +26,34 @@
     </repositories>
 
     <dependencies>
+        <!-- Serial communication -->
+        <dependency>
+            <groupId>com.github.schlunzis.jduino</groupId>
+            <artifactId>simple</artifactId>
+            <version>${jduino.version}</version>
+        </dependency>
+
+        <!-- Logger -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.github.schlunzis.jduino</groupId>
-            <artifactId>simple</artifactId>
-            <version>5abb3fec1c945f179be0bf4a60e2385b1d2d69dd</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

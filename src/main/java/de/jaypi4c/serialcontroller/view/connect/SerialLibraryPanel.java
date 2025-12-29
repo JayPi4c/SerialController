@@ -1,10 +1,9 @@
 package de.jaypi4c.serialcontroller.view.connect;
 
-import de.jaypi4c.serialcontroller.protocol.ltv.LTV;
-import org.schlunzis.jduino.channel.Channel;
 import org.schlunzis.jduino.channel.Device;
 import org.schlunzis.jduino.channel.DeviceConfiguration;
-import org.schlunzis.jduino.channel.serial.SerialChannel;
+import org.schlunzis.jduino.channel.serial.SerialDevice;
+import org.schlunzis.jduino.channel.serial.SerialDeviceConfiguration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,15 +17,37 @@ public class SerialLibraryPanel extends JPanel implements ConfigurationPanel {
 
     public SerialLibraryPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        JLabel nameLabel = new JLabel("Serial Library");
+        nameLabel.setFont(nameLabel.getFont().deriveFont(Font.BOLD));
+        add(nameLabel);
+
+        add(createSeparator());
+
+        JLabel connectionLabel = new JLabel("Device:");
+        add(connectionLabel);
         connections = new JComboBox<>();
+        connections.setRenderer(getPortRenderer());
         add(connections);
 
+        add(createSeparator());
+
+        JLabel baudLabel = new JLabel("Baud:");
+        add(baudLabel);
         baudInputField = new JTextField("9600");
+        baudInputField.setPreferredSize(expandSize(baudLabel.getPreferredSize(), 1.5));
         add(baudInputField);
 
+        add(createSeparator());
+
+        JLabel ledPinLabel = new JLabel("LED Pin:");
+        add(ledPinLabel);
         ledPinInputField = new JTextField("13");
         add(ledPinInputField);
-        connections.setRenderer(getPortRenderer());
+    }
+
+    private Dimension expandSize(Dimension original, double factor) {
+        return new Dimension((int) (original.getWidth() * factor), (int) original.getHeight());
     }
 
     @Override
@@ -55,24 +76,37 @@ public class SerialLibraryPanel extends JPanel implements ConfigurationPanel {
 
     @Override
     public DeviceConfiguration getCurrentConfiguration() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCurrentConfiguration'");
+        SerialDevice device = (SerialDevice) connections.getSelectedItem();
+        return new SerialDeviceConfiguration(device, getBaudRate());
+    }
+
+    private int getBaudRate() {
+        try {
+            return Integer.parseInt(baudInputField.getText());
+        } catch (NumberFormatException _) {
+            return 9600;
+        }
     }
 
     @Override
     public int getLEDPin() {
-        return 13;
+        try {
+            return Integer.parseInt(ledPinInputField.getText());
+        } catch (NumberFormatException _) {
+            return 13;
+        }
+    }
+
+    private JSeparator createSeparator() {
+        JSeparator separator = new JSeparator();
+        separator.setOrientation(SwingConstants.VERTICAL);
+        separator.setPreferredSize(new Dimension(2, 24));
+        return separator;
     }
 
     @Override
     public String getID() {
         return ID;
     }
-
-    @Override
-    public Channel<LTV> getChannel() {
-        return SerialChannel.builder().protocol(new LTV()).channelFactory(SerialChannel::new).build();
-    }
-
 
 }

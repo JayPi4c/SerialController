@@ -1,14 +1,10 @@
 package de.jaypi4c.serialcontroller.view;
 
+import de.jaypi4c.serialcontroller.view.connect.ConnectionPanel;
 import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
-
-import de.jaypi4c.serialcontroller.view.connect.CharacterDevicePanel;
-import de.jaypi4c.serialcontroller.view.connect.ConnectionPanel;
-import de.jaypi4c.serialcontroller.view.connect.SerialLibraryPanel;
-
 import java.awt.*;
 
 import static javax.swing.text.DefaultCaret.ALWAYS_UPDATE;
@@ -21,7 +17,7 @@ public class SerialControllerFrame extends JFrame {
     private final JTextArea textArea;
     private final MessagePanel messagePanel;
     private final ConnectionPanel connectionPanel;
-    
+
 
     public SerialControllerFrame() {
         setPreferredSize(new Dimension(800, 600));
@@ -29,7 +25,7 @@ public class SerialControllerFrame extends JFrame {
         setTitle("SerialController");
 
         setLayout(new BorderLayout());
-        
+
         connectionPanel = new ConnectionPanel();
         add(connectionPanel, BorderLayout.NORTH);
 

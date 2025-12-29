@@ -1,6 +1,7 @@
 package de.jaypi4c.serialcontroller.channel.characterdevice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.schlunzis.jduino.channel.Channel;
 import org.schlunzis.jduino.channel.ChannelMessageListener;
 import org.schlunzis.jduino.channel.Device;
@@ -14,12 +15,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /// Only 9600 baud rate supported for now. You have to set the Arduino to 9600 baud rate in the sketch:
 ///
 /// Or you have to update the baud rate using stty command before running the application: `stty -F /dev/ttyACM0 115200`
-/// 
+///
 /// Maybe also `stty -F /dev/ttyACM0 raw -echo 9600` required?
 ///
 /// @param <P>
@@ -38,13 +40,13 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
     }
 
     @Override
-    public void open(DeviceConfiguration deviceConfiguration) {
+    public void open(@NonNull DeviceConfiguration deviceConfiguration) {
         if (!(deviceConfiguration instanceof CharacterDeviceConfiguration(
                 CharacterDevice(_, String portPath, int baud)
         )))
             throw new IllegalArgumentException("Invalid device configuration type");
 
-        if(!configureTTY(portPath, baud))
+        if (!configureTTY(portPath, baud))
             log.warn("Failed to configure TTY");
         else
             log.debug("Successfully configured TTY");
@@ -77,15 +79,15 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
         }
     }
 
-    private boolean configureTTY(String path, int baud){
-        try{
-           ProcessBuilder pb = new ProcessBuilder(
-    "stty",
-                "-F",
-                path,
-                "raw",
-                "-echo",
-                String.valueOf(baud)
+    private boolean configureTTY(String path, int baud) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder(
+                    "stty",
+                    "-F",
+                    path,
+                    "raw",
+                    "-echo",
+                    String.valueOf(baud)
             );
 
             pb.redirectErrorStream(true);
@@ -95,7 +97,7 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
                 log.warn("Executing tty configs failed!");
                 return false;
             }
-        } catch(Exception _) {
+        } catch (Exception _) {
             return false;
         }
         return true;
@@ -117,7 +119,7 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
     }
 
     @Override
-    public void sendMessage(Message<P> message) {
+    public void sendMessage(@NonNull Message<P> message) {
         byte[] encodedMessage = protocol.getMessageEncoder().encode(message);
         log.debug("Sending bytes: {}", Arrays.toString(encodedMessage));
         try {
@@ -128,20 +130,19 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
         }
     }
 
+    @NonNull
     @Override
     public List<? extends Device> getDevices() {
-        return List.of(
-                new CharacterDevice("Character Device", "/dev/ttyACM0", 9600)
-        );
+        return Collections.emptyList();
     }
 
     @Override
-    public void addMessageListener(ChannelMessageListener<P> channelMessageListener) {
+    public void addMessageListener(@NonNull ChannelMessageListener<P> channelMessageListener) {
         listeners.add(channelMessageListener);
     }
 
     @Override
-    public void removeMessageListener(ChannelMessageListener<P> channelMessageListener) {
+    public void removeMessageListener(@NonNull ChannelMessageListener<P> channelMessageListener) {
         listeners.remove(channelMessageListener);
     }
 

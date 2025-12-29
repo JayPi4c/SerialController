@@ -1,7 +1,5 @@
 package de.jaypi4c.serialcontroller.view.connect;
 
-import de.jaypi4c.serialcontroller.protocol.ltv.LTV;
-import org.schlunzis.jduino.channel.Channel;
 import org.schlunzis.jduino.channel.Device;
 import org.schlunzis.jduino.channel.DeviceConfiguration;
 
@@ -20,8 +18,5 @@ public interface ConfigurationPanel {
     int getLEDPin();
 
     String getID();
-
-    /// FIXME get this method out of the view
-    Channel<LTV> getChannel();
 
 }

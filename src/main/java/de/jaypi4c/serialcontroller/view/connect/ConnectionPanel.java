@@ -21,6 +21,10 @@ public class ConnectionPanel extends JPanel {
         this.nextConfig = new JButton(">");
         this.controlPanel = new JPanel();
         controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JSeparator separator = new JSeparator();
+        separator.setOrientation(SwingConstants.VERTICAL);
+        separator.setPreferredSize(new Dimension(2, 24));
+        controlPanel.add(separator);
         controlPanel.add(connectButton);
         controlPanel.add(nextConfig);
 

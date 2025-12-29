@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Communicator {
+
+    private final List<ChannelMessageListener<LTV>> messageListeners;
+
     @Getter
     private Channel<LTV> channel;
-
     @Getter
     @Setter
     private int ledPin;
-
-    private List<ChannelMessageListener<LTV>> messageListeners;
 
     public Communicator() {
         messageListeners = new ArrayList<>();
@@ -28,6 +28,7 @@ public class Communicator {
     }
 
     public void setChannel(Channel<LTV> channel) {
+        resetChannel();
         this.channel = channel;
         messageListeners.forEach(channel::addMessageListener);
     }
