@@ -1,5 +1,6 @@
 package de.jaypi4c.serialcontroller.view;
 
+import de.jaypi4c.serialcontroller.view.connect.ConnectionPanel;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -13,9 +14,10 @@ public class SerialControllerFrame extends JFrame {
 
     private final JButton onBtn;
     private final JButton offBtn;
-    private final ConnectionPanel connectionPanel;
     private final JTextArea textArea;
     private final MessagePanel messagePanel;
+    private final ConnectionPanel connectionPanel;
+
 
     public SerialControllerFrame() {
         setPreferredSize(new Dimension(800, 600));
