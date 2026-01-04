@@ -3,7 +3,7 @@
 SerialController is an example application to demonstrate the potential of the `JDuino`
 Library ([GitHub](https://github.com/schlunzis/jduino)).
 
-To connect with a microcontroller, you can use the (SerialProtocol)[https://github.com/JayPi4c/SerialProtocol] Arduino
+To connect with a microcontroller, you can use the [SerialProtocol](https://github.com/JayPi4c/SerialProtocol) Arduino
 library, which provides a simple way to communicate over a serial connection. See its documentation for more details.
 
 ## Protocols
