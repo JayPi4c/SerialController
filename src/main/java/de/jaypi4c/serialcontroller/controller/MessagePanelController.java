@@ -1,8 +1,8 @@
 package de.jaypi4c.serialcontroller.controller;
 
 import de.jaypi4c.serialcontroller.model.Communicator;
-import de.jaypi4c.serialcontroller.protocol.ltv.LTVMessage;
 import de.jaypi4c.serialcontroller.view.MessagePanel;
+import org.schlunzis.jduino.protocol.tlv.TLVMessage;
 
 import java.awt.event.ActionListener;
 import java.nio.charset.StandardCharsets;
@@ -21,7 +21,7 @@ public class MessagePanelController {
 
     private ActionListener getSendActionListener() {
         return _ -> {
-            communicator.getChannel().sendMessage(new LTVMessage((byte) 1, messagePanel.getMessageField().getText().getBytes(StandardCharsets.UTF_8)));
+            communicator.getChannel().sendMessage(new TLVMessage((byte) 1, messagePanel.getMessageField().getText().getBytes(StandardCharsets.UTF_8)));
             messagePanel.getMessageField().setText("");
         };
     }

@@ -3,7 +3,6 @@ package de.jaypi4c.serialcontroller.controller.config;
 import de.jaypi4c.serialcontroller.channel.characterdevice.CharacterDeviceChannel;
 import de.jaypi4c.serialcontroller.channel.characterdevice.CharacterDeviceConfiguration;
 import de.jaypi4c.serialcontroller.model.Communicator;
-import de.jaypi4c.serialcontroller.protocol.ltv.LTV;
 import de.jaypi4c.serialcontroller.view.connect.CharacterDevicePanel;
 import de.jaypi4c.serialcontroller.view.connect.ConfigurationPanel;
 import de.jaypi4c.serialcontroller.view.connect.ConnectionPanel;
@@ -11,8 +10,9 @@ import de.jaypi4c.serialcontroller.view.message.ToastMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.jduino.channel.Channel;
 import org.schlunzis.jduino.channel.DeviceConfiguration;
-import org.schlunzis.jduino.channel.serial.SerialChannel;
 import org.schlunzis.jduino.channel.serial.SerialDeviceConfiguration;
+import org.schlunzis.jduino.protocol.tlv.TLV;
+import org.schlunzis.jduino.simple.SimpleChannel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -90,11 +90,11 @@ public class ConnectionPanelController {
     }
 
 
-    private Channel<LTV> createChannelFor(DeviceConfiguration config) {
+    private Channel<TLV> createChannelFor(DeviceConfiguration config) {
         if (config instanceof CharacterDeviceConfiguration) {
-            return new CharacterDeviceChannel<>(new LTV());
+            return new CharacterDeviceChannel<>(new TLV());
         } else if (config instanceof SerialDeviceConfiguration) {
-            return SerialChannel.builder().protocol(new LTV()).channelFactory(SerialChannel::new).build();
+            return SimpleChannel.create();
         }
         throw new IllegalArgumentException("Unsupported device configuration type: " + config.getClass().getName());
     }

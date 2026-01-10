@@ -2,11 +2,11 @@ package de.jaypi4c.serialcontroller.controller;
 
 import de.jaypi4c.serialcontroller.controller.config.ConnectionPanelController;
 import de.jaypi4c.serialcontroller.model.Communicator;
-import de.jaypi4c.serialcontroller.protocol.ltv.LTV;
-import de.jaypi4c.serialcontroller.protocol.ltv.LTVMessage;
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.jduino.channel.ChannelMessageListener;
+import org.schlunzis.jduino.protocol.tlv.TLV;
+import org.schlunzis.jduino.protocol.tlv.TLVMessage;
 
 import javax.swing.text.JTextComponent;
 import java.awt.event.ActionListener;
@@ -30,7 +30,7 @@ public class SerialController {
         new MessagePanelController(communicator, frame.getMessagePanel());
     }
 
-    private ChannelMessageListener<LTV> getMessageProcessor(JTextComponent textComponent) {
+    private ChannelMessageListener<TLV> getMessageProcessor(JTextComponent textComponent) {
         return (message) -> textComponent.setText(textComponent.getText() + new String(message.getPayload(), StandardCharsets.UTF_8) + "\n");
     }
 
@@ -53,7 +53,7 @@ public class SerialController {
             byte[] payload = new byte[2];
             payload[0] = (byte) communicator.getLedPin();
             payload[1] = (byte) 0;
-            communicator.getChannel().sendMessage(new LTVMessage((byte) 3, payload));
+            communicator.getChannel().sendMessage(new TLVMessage((byte) 3, payload));
         };
     }
 
@@ -62,7 +62,7 @@ public class SerialController {
             byte[] payload = new byte[2];
             payload[0] = (byte) communicator.getLedPin();
             payload[1] = (byte) 1;
-            communicator.getChannel().sendMessage(new LTVMessage((byte) 3, payload));
+            communicator.getChannel().sendMessage(new TLVMessage((byte) 3, payload));
         };
     }
 
