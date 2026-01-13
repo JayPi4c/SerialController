@@ -1,42 +1,46 @@
 package de.jaypi4c.serialcontroller.model;
 
+import de.jaypi4c.serialcontroller.agnostic.ChannelWrapper;
+import de.jaypi4c.serialcontroller.channel.characterdevice.CharacterDeviceChannel;
+import de.jaypi4c.serialcontroller.protocol.mytlv.MyTLV;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.jduino.channel.Channel;
 import org.schlunzis.jduino.channel.ChannelMessageListener;
-import org.schlunzis.jduino.protocol.tlv.TLV;
+import org.schlunzis.jduino.protocol.Protocol;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@Slf4j
 public class Communicator {
 
-    private final List<ChannelMessageListener<TLV>> messageListeners;
 
     @Getter
-    private Channel<TLV> channel;
+    private final ChannelWrapper channel;
     @Getter
     @Setter
     private int ledPin;
 
+    @Getter
+    private Protocol protocol;
+
     public Communicator() {
-        messageListeners = new ArrayList<>();
+        channel = new ChannelWrapper();
+        channel.setChannelFactory(CharacterDeviceChannel::new);
+        setProtocol(new MyTLV());
     }
 
-    public void addMessageListener(ChannelMessageListener<TLV> listener) {
-        messageListeners.add(listener);
+    public void setProtocol(Protocol protocol) {
+        this.protocol = protocol;
+        log.info("Setting protocol to {}", protocol.getClass().getSimpleName());
+        channel.setProtocol(protocol);
     }
 
-    public void setChannel(Channel<TLV> channel) {
-        resetChannel();
-        this.channel = channel;
-        messageListeners.forEach(channel::addMessageListener);
+    public void setChannelFactory(Channel.ChannelFactory<Protocol, Channel> channelFactory) {
+        this.channel.setChannelFactory(channelFactory);
     }
 
-    public void resetChannel() {
-        if (channel != null)
-            channel.close();
-        channel = null;
+    public void addMessageListener(ChannelMessageListener listener) {
+        this.channel.addMessageListener(listener);
     }
 
 }

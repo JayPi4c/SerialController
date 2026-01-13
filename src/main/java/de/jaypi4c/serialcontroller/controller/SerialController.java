@@ -5,7 +5,6 @@ import de.jaypi4c.serialcontroller.model.Communicator;
 import de.jaypi4c.serialcontroller.view.SerialControllerFrame;
 import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.jduino.channel.ChannelMessageListener;
-import org.schlunzis.jduino.protocol.tlv.TLV;
 import org.schlunzis.jduino.protocol.tlv.TLVMessage;
 
 import javax.swing.text.JTextComponent;
@@ -30,8 +29,11 @@ public class SerialController {
         new MessagePanelController(communicator, frame.getMessagePanel());
     }
 
-    private ChannelMessageListener<TLV> getMessageProcessor(JTextComponent textComponent) {
-        return (message) -> textComponent.setText(textComponent.getText() + new String(message.getPayload(), StandardCharsets.UTF_8) + "\n");
+    private ChannelMessageListener getMessageProcessor(JTextComponent textComponent) {
+        return (message) -> {
+            log.info("Received message: Type={}, Payload={}", message.getMessageType(), new String(message.getPayload(), StandardCharsets.UTF_8));
+            textComponent.setText(textComponent.getText() + new String(message.getPayload(), StandardCharsets.UTF_8) + "\n");
+        };
     }
 
     private WindowListener getWindowListener() {

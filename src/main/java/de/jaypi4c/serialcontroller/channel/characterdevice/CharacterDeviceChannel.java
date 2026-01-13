@@ -2,7 +2,7 @@ package de.jaypi4c.serialcontroller.channel.characterdevice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
-import org.schlunzis.jduino.channel.Channel;
+import org.schlunzis.jduino.channel.AbstractChannel;
 import org.schlunzis.jduino.channel.ChannelMessageListener;
 import org.schlunzis.jduino.channel.Device;
 import org.schlunzis.jduino.channel.DeviceConfiguration;
@@ -13,7 +13,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -23,19 +22,15 @@ import java.util.List;
 /// Or you have to update the baud rate using stty command before running the application: `stty -F /dev/ttyACM0 115200`
 ///
 /// Maybe also `stty -F /dev/ttyACM0 raw -echo 9600` required?
-///
-/// @param <P>
 @Slf4j
-public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P> {
-    private final List<ChannelMessageListener<P>> listeners;
-    private final P protocol;
+public class CharacterDeviceChannel extends AbstractChannel {
+    private final Protocol protocol;
     private FileOutputStream outputStream;
     private FileInputStream inputStream;
     private boolean connected;
     private Thread dataListener;
 
-    public CharacterDeviceChannel(P protocol) {
-        this.listeners = new ArrayList<>();
+    public CharacterDeviceChannel(Protocol protocol) {
         this.protocol = protocol;
     }
 
@@ -61,8 +56,8 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
                         protocol.getMessageDecoder().pushNextByte((byte) data);
                         // log.debug("Read byte: 0x{}", Integer.toHexString(data & 0xFF));
                         if (protocol.getMessageDecoder().isMessageComplete()) {
-                            Message<P> message = protocol.getMessageDecoder().getDecodedMessage();
-                            for (ChannelMessageListener<P> listener : listeners) {
+                            Message message = protocol.getMessageDecoder().getDecodedMessage();
+                            for (ChannelMessageListener listener : channelMessageListeners) {
                                 listener.onMessageReceived(message);
                             }
                         }
@@ -119,7 +114,7 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
     }
 
     @Override
-    public void sendMessage(@NonNull Message<P> message) {
+    public void sendMessage(@NonNull Message message) {
         byte[] encodedMessage = protocol.getMessageEncoder().encode(message);
         log.debug("Sending bytes: {}", Arrays.toString(encodedMessage));
         try {
@@ -134,16 +129,6 @@ public class CharacterDeviceChannel<P extends Protocol<P>> implements Channel<P>
     @Override
     public List<? extends Device> getDevices() {
         return Collections.emptyList();
-    }
-
-    @Override
-    public void addMessageListener(@NonNull ChannelMessageListener<P> channelMessageListener) {
-        listeners.add(channelMessageListener);
-    }
-
-    @Override
-    public void removeMessageListener(@NonNull ChannelMessageListener<P> channelMessageListener) {
-        listeners.remove(channelMessageListener);
     }
 
     @Override

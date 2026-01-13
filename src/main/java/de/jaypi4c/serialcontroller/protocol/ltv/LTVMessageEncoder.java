@@ -3,9 +3,9 @@ package de.jaypi4c.serialcontroller.protocol.ltv;
 import org.schlunzis.jduino.protocol.Message;
 import org.schlunzis.jduino.protocol.MessageEncoder;
 
-public class LTVMessageEncoder implements MessageEncoder<LTV> {
+public class LTVMessageEncoder implements MessageEncoder {
     @Override
-    public byte[] encode(Message<LTV> m) {
+    public byte[] encode(Message m) {
         if (!(m instanceof LTVMessage(byte type, byte[] value))) {
             throw new IllegalArgumentException("Invalid message type");
         }

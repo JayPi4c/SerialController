@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.jduino.channel.Channel;
 import org.schlunzis.jduino.channel.DeviceConfiguration;
 import org.schlunzis.jduino.channel.serial.SerialDeviceConfiguration;
-import org.schlunzis.jduino.protocol.tlv.TLV;
+import org.schlunzis.jduino.protocol.Protocol;
 import org.schlunzis.jduino.simple.SimpleChannel;
 
 import java.awt.*;
@@ -63,7 +63,8 @@ public class ConnectionPanelController {
 
     private void updateCardDevices(String id) {
         ConfigurationPanel configPanel = configurationCards.get(id);
-        communicator.setChannel(createChannelFor(configPanel.getCurrentConfiguration()));
+        communicator.setChannelFactory(createChannelBuilder(configPanel.getCurrentConfiguration()));
+        communicator.setProtocol(communicator.getProtocol());
         configPanel.clearDevices();
         configPanel.addDevices(communicator.getChannel().getDevices());
     }
@@ -90,11 +91,11 @@ public class ConnectionPanelController {
     }
 
 
-    private Channel<TLV> createChannelFor(DeviceConfiguration config) {
+    private Channel.ChannelFactory<Protocol, Channel> createChannelBuilder(DeviceConfiguration config) {
         if (config instanceof CharacterDeviceConfiguration) {
-            return new CharacterDeviceChannel<>(new TLV());
+            return CharacterDeviceChannel::new;
         } else if (config instanceof SerialDeviceConfiguration) {
-            return SimpleChannel.create();
+            return _ -> SimpleChannel.create();
         }
         throw new IllegalArgumentException("Unsupported device configuration type: " + config.getClass().getName());
     }

@@ -1,15 +1,18 @@
 package de.jaypi4c.serialcontroller.protocol.ltv;
 
+import lombok.extern.slf4j.Slf4j;
 import org.schlunzis.jduino.protocol.MessageDecoder;
 
 import java.io.ByteArrayOutputStream;
 
-public class LTVMessageDecoder implements MessageDecoder<LTV> {
+@Slf4j
+public class LTVMessageDecoder implements MessageDecoder {
     private final ByteArrayOutputStream payload = new ByteArrayOutputStream();
     private byte type = -1;
     private int expectedLength = -1;
 
     public void pushNextByte(byte next) {
+        log.debug("Pushed byte: {}", next);
         if (expectedLength < 0) {
             // First byte = message length
             expectedLength = next & 0xFF;  // convert to unsigned
