@@ -1,4 +1,4 @@
-module ArduinoJava {
+module de.jaypi4c.serialcontroller {
     requires static lombok;
 
     requires org.slf4j;

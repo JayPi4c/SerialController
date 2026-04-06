@@ -103,10 +103,15 @@ public class CharacterDeviceChannel extends AbstractChannel {
         try {
             if (dataListener != null)
                 dataListener.interrupt();
-            if (outputStream != null)
+            if (outputStream != null) {
+                outputStream.flush();
                 outputStream.close();
-            if (inputStream != null)
+            }
+            if (inputStream != null) {
+                while (inputStream.available() > 0)
+                    if (inputStream.read() < 0) break;
                 inputStream.close();
+            }
             connected = false;
         } catch (IOException e) {
             e.printStackTrace();
